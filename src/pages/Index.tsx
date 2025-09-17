@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"; // ✅ react-router-dom에서 Link를 가져옵니다.
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -41,9 +42,11 @@ const Index = () => {
               <a href="#docs" className="text-muted-foreground hover:text-foreground transition-colors">
                 Documentation
               </a>
-              <Button className="bg-primary hover:bg-primary-dark text-primary-foreground">
-                Launch App
-              </Button>
+              <Link to="/app">
+                <Button className="bg-primary hover:bg-primary-dark text-primary-foreground">
+                  Launch App
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -72,10 +75,12 @@ const Index = () => {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-primary hover:bg-primary-dark text-primary-foreground group">
-                  Start Bidding
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                <Link to="/app">
+                  <Button size="lg" className="bg-primary hover:bg-primary-dark text-primary-foreground group">
+                    Start Bidding
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
                 <Button size="lg" variant="outline" className="border-border hover:bg-card">
                   View Demo
                 </Button>
@@ -168,9 +173,11 @@ const Index = () => {
                 verify instantly, and auction across any blockchain.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" variant="secondary" className="bg-white text-black hover:bg-white/90">
-                  Launch Platform
-                </Button>
+                <Link to="/app">
+                  <Button size="lg" variant="secondary" className="bg-white text-black hover:bg-white/90">
+                    Launch Platform
+                  </Button>
+                </Link>
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                   Read Documentation
                 </Button>
@@ -219,7 +226,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            © 2024 ZK Auctions. Built on Aligned Layer.
+            © 2025 ZK Auctions. Built on Aligned Layer.
           </div>
         </div>
       </footer>
