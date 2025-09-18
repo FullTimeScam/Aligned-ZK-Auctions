@@ -107,8 +107,8 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     useEffect(() => {
         if (phase === 'COMMIT_OPEN' && auction) {
             const autoIncrementInterval = setInterval(() => {
-                incrementCommitCount(auction.id, Math.floor(Math.random() * 5) + 1);
-            }, 3000);
+                incrementCommitCount(auction.id, Math.floor(Math.random() * 25) + 1);
+            }, 500);
             return () => clearInterval(autoIncrementInterval);
         }
     }, [phase, auction, incrementCommitCount]);
@@ -234,6 +234,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                                         <SelectItem value="Polygon">Polygon (~$0.01)</SelectItem>
                                                         <SelectItem value="Arbitrum">Arbitrum (~$0.05)</SelectItem>
                                                         <SelectItem value="Base">Base (~$0.005)</SelectItem>
+                                                        <SelectItem value="Polygon">Etherium (~$5)</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </div>
