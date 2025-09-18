@@ -1,17 +1,17 @@
-// src/pages/app/Auction.tsx
-
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { WalletContext, Auction } from '@/components/AuctionApp';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { Users, Loader2 } from 'lucide-react'; // ✅ 로딩 아이콘 추가
 
-// 컴포넌트들
+// ## UI 컴포넌트 ##
+
 const ProofVisualizer = ({ startCount }: { startCount: number }) => {
     const [proofs, setProofs] = useState(startCount);
     useEffect(() => {
@@ -37,7 +37,8 @@ const StatusBadge = ({ status, mode }: { status: string, mode?: string | null })
     return <Badge variant={variant} className="text-sm">{status} {mode && <span className="ml-2 opacity-70">{mode}</span>}</Badge>;
 };
 
-// 메인 페이지
+// ## 메인 페이지 컴포넌트 ##
+
 type AuctionPageProps = {
     auctions: Auction[];
     incrementCommitCount: (auctionId: number, amount: number) => void;
@@ -57,6 +58,11 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     const [bidAmount, setBidAmount] = useState('');
     const [biddingChain, setBiddingChain] = useState('Polygon');
     const [finalResult, setFinalResult] = useState<{ winner: string; winningBid: string } | null>(null);
+    const [committedBid, setCommittedBid] = useState<string | null>(null);
+    
+    // ✅ 버튼 로딩 상태를 관리하기 위한 상태 추가
+    const [isDepositing, setIsDepositing] = useState(false);
+    const [isCommitting, setIsCommitting] = useState(false);
 
     useEffect(() => {
         const auctionId = parseInt(id || '0');
@@ -107,21 +113,38 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
         }
     }, [phase, auction, incrementCommitCount]);
 
-    if (!auction) return <p>Loading auction...</p>;
-    
-    const handleCommit = () => {
-        if (!hasDeposited) { toast.warning("Please deposit a bond first."); return; }
-        if (parseFloat(bidAmount) < auction.minPrice) { toast.error(`Bid must be at least ${auction.minPrice} ${auction.currency}.`); return; }
-        
-        toast.info(`Requesting ZK proof from Aligned Meta-Proving Service... (from ${biddingChain})`);
-        setCommitStatus('PENDING');
+    const handleDeposit = () => {
+        setIsDepositing(true); // ✅ 로딩 시작
+
+        // ✅ 5초 딜레이 시작
         setTimeout(() => {
-            setCommitStatus('VALID');
-            toast.success("Commit has been successfully verified!");
-            incrementCommitCount(auction.id, 1);
-        }, 2500);
+            setHasDeposited(true);
+            toast.info("ℹ️ Bond deposited successfully.");
+            setIsDepositing(false); // ✅ 로딩 종료
+        }, 5000);
     };
 
+    const handleCommit = () => {
+        if (!walletContext?.isConnected) { toast.error("🚨 Please connect your wallet first."); return; }
+        if (!hasDeposited) { toast.warning("⚠️ Please deposit a bond first."); return; }
+        if (!auction || parseFloat(bidAmount) < auction.minPrice) { toast.error(`🚨 Bid must be at least ${auction?.minPrice} ${auction?.currency}.`); return; }
+        
+        setIsCommitting(true); // ✅ 커밋 로딩 시작
+        setCommitStatus('PENDING');
+        toast.info(`ℹ️ Requesting ZK proof from Aligned Meta-Proving Service...`);
+        
+        // ✅ 5초 딜레이 시작
+        setTimeout(() => {
+            setCommitStatus('VALID');
+            setCommittedBid(bidAmount);
+            toast.success("✅ Commit has been successfully verified!");
+            incrementCommitCount(auction.id, 1);
+            setIsCommitting(false); // ✅ 커밋 로딩 종료
+        }, 5000);
+    };
+
+    if (!auction) return <p className="text-center text-muted-foreground py-10">Loading auction...</p>;
+    
     const securityMode = phase === 'COMMIT_OPEN' ? '⚡ Fast Mode' : phase === 'SETTLED' ? '🔒 Secure Mode' : null;
     const isWinner = finalResult && walletContext?.isConnected && walletContext.address === finalResult.winner;
 
@@ -164,7 +187,20 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                     </CardContent>
                 </Card>
                 
-                {phase === 'COMMIT_OPEN' && <ProofVisualizer startCount={auction.commitCount} />}
+                {phase === 'COMMIT_OPEN' && (
+                    <div className="grid grid-cols-2 gap-4">
+                        <ProofVisualizer startCount={auction.commitCount} />
+                        <Card>
+                             <CardContent className="p-4 text-center">
+                                <p className="text-sm text-muted-foreground">Current Participants</p>
+                                <div className="flex items-center justify-center gap-2">
+                                    <Users className="h-6 w-6 text-primary" />
+                                    <p className="text-2xl font-bold font-mono text-primary">{auction.commitCount.toLocaleString()}</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
 
                 {/* Action Card */}
                 <Card>
@@ -176,8 +212,17 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                     <CardContent>
                          {phase === 'COMMIT_OPEN' && (
                             <div className="space-y-4">
-                                {!hasDeposited ? (
-                                    <Button className="w-full" onClick={() => {setHasDeposited(true); toast.info("Bond deposited successfully.")}}>1. Deposit Bond</Button>
+                                {committedBid ? (
+                                    <div className="text-center p-4 bg-muted rounded-lg">
+                                        <p className="text-sm text-muted-foreground">Your Committed Bid</p>
+                                        <p className="text-2xl font-bold">{committedBid} {auction.currency}</p>
+                                        <p className="text-xs text-muted-foreground mt-2">Your bid is sealed until the reveal phase.</p>
+                                    </div>
+                                ) : !hasDeposited ? (
+                                    <Button className="w-full" onClick={handleDeposit} disabled={isDepositing}>
+                                        {isDepositing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                        {isDepositing ? 'Processing Deposit...' : '1. Deposit Bond'}
+                                    </Button>
                                 ) : (
                                     <div className="space-y-4">
                                         <div className="grid grid-cols-2 gap-4">
@@ -197,7 +242,10 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                                 <Input type="number" value={bidAmount} onChange={e => setBidAmount(e.target.value)} placeholder={`min. ${auction.minPrice}`} />
                                             </div>
                                         </div>
-                                        <Button className="w-full" onClick={handleCommit} disabled={commitStatus === 'VALID'}>2. Commit Bid</Button>
+                                        <Button className="w-full" onClick={handleCommit} disabled={isCommitting || commitStatus === 'VALID' || !bidAmount || parseFloat(bidAmount) < auction.minPrice}>
+                                            {isCommitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                            {isCommitting ? 'Committing...' : '2. Commit Bid'}
+                                        </Button>
                                     </div>
                                 )}
                             </div>
@@ -214,7 +262,11 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                         <p className="text-muted-foreground">Winner</p>
                                         <p className="font-mono text-sm">{finalResult.winner}</p>
                                     </div>
-                                    {isWinner && <Button className="w-full">Claim Asset</Button>}
+                                    {isWinner ? (
+                                        <Button className="w-full">Claim Asset</Button>
+                                    ) : (
+                                        <p className="text-sm text-center text-destructive pt-2">You were not the winner.</p>
+                                    )}
                                 </div>
                             ) : <p>You did not participate in this auction.</p>
                          )}

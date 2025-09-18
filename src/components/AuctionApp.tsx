@@ -1,9 +1,7 @@
-// src/components/AuctionApp.tsx
-
 import React, { useState, createContext } from 'react';
 import { Route, Routes, Link, NavLink } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner"; // Toaster는 이미 import 되어 있습니다.
 
 // 페이지 임포트
 import ExplorePage from '@/pages/app/Explore';
@@ -51,7 +49,7 @@ const AppHeader = () => {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center">
         <div className="mr-4 hidden md:flex">
-          <Link to="/app" className="mr-6 flex items-center space-x-2">
+          <Link to="/" className="mr-6 flex items-center space-x-2">
             <span className="hidden font-bold sm:inline-block">Aligned Auction Forge</span>
           </Link>
           <nav className="flex items-center gap-6 text-sm">
@@ -106,6 +104,17 @@ export default function AuctionApp() {
   return (
     <WalletContext.Provider value={{ ...wallet, connectWallet, disconnectWallet }}>
       <div className="relative flex min-h-screen flex-col bg-background">
+        {/* ✅ Toaster 설정을 수정하여 디자인과 크기, 위치를 변경합니다. */}
+        <Toaster 
+          position="top-center" 
+          richColors
+          toastOptions={{
+            classNames: {
+              toast: 'p-6 border-border text-base',
+              title: 'text-lg font-bold',
+            },
+          }}
+        />
         <AppHeader />
         <main className="flex-1 container py-8">
           <Routes>
@@ -115,7 +124,6 @@ export default function AuctionApp() {
           </Routes>
         </main>
       </div>
-      <Toaster />
     </WalletContext.Provider>
   );
 }

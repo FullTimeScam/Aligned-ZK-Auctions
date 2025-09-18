@@ -1,6 +1,4 @@
-// src/pages/app/Create.tsx
-
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Auction } from '@/components/AuctionApp';
+import { Auction, WalletContext } from '@/components/AuctionApp';
 import { toast } from "sonner";
 
 type CreatePageProps = {
@@ -18,6 +16,8 @@ type CreatePageProps = {
 export default function CreatePage({ addAuction }: CreatePageProps) {
   const navigate = useNavigate();
   const [imageUrls, setImageUrls] = useState(['']);
+  const walletContext = useContext(WalletContext);
+
 
   const handleImageUrlChange = (index: number, value: string) => {
     const newUrls = [...imageUrls];
@@ -26,6 +26,7 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
   };
 
   const addImageUrlInput = () => setImageUrls([...imageUrls, '']);
+
   const removeImageUrlInput = (index: number) => {
     if (imageUrls.length > 1) {
       setImageUrls(imageUrls.filter((_, i) => i !== index));
@@ -34,11 +35,17 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!walletContext?.isConnected) {
+        toast.error("🚨 Please connect your wallet first.");
+        return;
+    }
+
     const formData = new FormData(e.currentTarget);
     const finalImageUrls = imageUrls.filter(url => url.trim() !== '');
 
     if (finalImageUrls.length === 0) {
-        toast.error("Please provide at least one image URL.");
+        toast.error("🚨 Please provide at least one image URL.");
         return;
     }
     
@@ -53,11 +60,11 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
       rule: formData.get('rule') as string,
       currency: formData.get('currency') as string,
       minPrice: parseFloat(formData.get('minPrice') as string),
-      commitEnd: new Date(revealEnd.getTime() - 2 * 60 * 1000),
+      commitEnd: new Date(revealEnd.getTime() - 0.17 * 60 * 1000),
       revealEnd: revealEnd,
     });
     
-    toast.success("Auction created successfully! Redirecting...");
+    toast.success("✅ Auction created successfully! Redirecting...");
     setTimeout(() => navigate('/app'), 1500);
   };
 
@@ -70,7 +77,6 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Section 1 */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Basic Information</h3>
               <div className="space-y-2">
@@ -93,7 +99,6 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
               </div>
             </div>
 
-            {/* Section 2 */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Auction Rules</h3>
               <div className="grid grid-cols-2 gap-4">

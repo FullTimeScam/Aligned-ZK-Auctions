@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Auction } from "@/components/AuctionApp";
+import { Users } from 'lucide-react'; // 아이콘 추가
 
 type AuctionCardProps = {
   auction: Auction;
@@ -28,9 +29,13 @@ const AuctionCard = ({ auction }: AuctionCardProps) => {
           </div>
           <p className="text-sm text-muted-foreground mt-1">{auction.description.substring(0, 50)}...</p>
         </CardContent>
-        <CardFooter className="p-4 pt-0 flex justify-between text-sm text-muted-foreground">
-          <span>{auction.chain}</span>
+        <CardFooter className="p-4 pt-0 flex justify-between text-sm text-muted-foreground items-center">
           <Badge variant={isEnded ? "outline" : "default"}>{isEnded ? 'Ended' : 'Active'}</Badge>
+          {/* ✅ 참여자 수 표시 UI 추가 */}
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            <span>{auction.commitCount.toLocaleString()}</span>
+          </div>
         </CardFooter>
       </Card>
     </Link>
