@@ -17,7 +17,7 @@ const ProofVisualizer = ({ startCount }: { startCount: number }) => {
     useEffect(() => {
         setProofs(startCount);
         const interval = setInterval(() => {
-            setProofs(prev => prev + Math.floor(Math.random() * 500) + 100);
+            setProofs(prev => prev + Math.floor(Math.random() * 100) + 100);
         }, 300);
         return () => clearInterval(interval);
     }, [startCount]);
