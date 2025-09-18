@@ -1,7 +1,8 @@
 import React, { useState, createContext } from 'react';
 import { Route, Routes, Link, NavLink } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner"; // Toaster는 이미 import 되어 있습니다.
+import { Button, buttonVariants } from "@/components/ui/button"; // ✅ buttonVariants 추가
+import { cn } from "@/lib/utils"; // ✅ cn 유틸리티 추가
 
 // 페이지 임포트
 import ExplorePage from '@/pages/app/Explore';
@@ -52,9 +53,27 @@ const AppHeader = () => {
           <Link to="/" className="mr-6 flex items-center space-x-2">
             <span className="hidden font-bold sm:inline-block">Aligned Auction Forge</span>
           </Link>
-          <nav className="flex items-center gap-6 text-sm">
-            <NavLink to="/app" end className={({ isActive }) => isActive ? "text-foreground" : "text-muted-foreground transition-colors hover:text-foreground"}>Explore</NavLink>
-            <NavLink to="/app/create" className={({ isActive }) => isActive ? "text-foreground" : "text-muted-foreground transition-colors hover:text-foreground"}>Create</NavLink>
+          {/* ✅ NavLink에 버튼 스타일을 적용합니다. */}
+          <nav className="flex items-center gap-2 text-sm">
+            <NavLink 
+              to="/app" 
+              end 
+              className={({ isActive }) => cn(
+                buttonVariants({ variant: isActive ? "secondary" : "ghost", size: "sm" }),
+                "px-4"
+              )}
+            >
+              Explore
+            </NavLink>
+            <NavLink 
+              to="/app/create" 
+              className={({ isActive }) => cn(
+                buttonVariants({ variant: isActive ? "secondary" : "ghost", size: "sm" }),
+                "px-4"
+              )}
+            >
+              Create
+            </NavLink>
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
