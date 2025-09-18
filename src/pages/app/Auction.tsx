@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Users, Loader2 } from 'lucide-react'; // ✅ 로딩 아이콘 추가
+import { Users, Loader2 } from 'lucide-react';
 
 // ## UI 컴포넌트 ##
 
@@ -59,8 +59,6 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     const [biddingChain, setBiddingChain] = useState('Polygon');
     const [finalResult, setFinalResult] = useState<{ winner: string; winningBid: string } | null>(null);
     const [committedBid, setCommittedBid] = useState<string | null>(null);
-    
-    // ✅ 버튼 로딩 상태를 관리하기 위한 상태 추가
     const [isDepositing, setIsDepositing] = useState(false);
     const [isCommitting, setIsCommitting] = useState(false);
 
@@ -114,13 +112,11 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     }, [phase, auction, incrementCommitCount]);
 
     const handleDeposit = () => {
-        setIsDepositing(true); // ✅ 로딩 시작
-
-        // ✅ 5초 딜레이 시작
+        setIsDepositing(true);
         setTimeout(() => {
             setHasDeposited(true);
             toast.info("ℹ️ Bond deposited successfully.");
-            setIsDepositing(false); // ✅ 로딩 종료
+            setIsDepositing(false);
         }, 5000);
     };
 
@@ -129,17 +125,16 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
         if (!hasDeposited) { toast.warning("⚠️ Please deposit a bond first."); return; }
         if (!auction || parseFloat(bidAmount) < auction.minPrice) { toast.error(`🚨 Bid must be at least ${auction?.minPrice} ${auction?.currency}.`); return; }
         
-        setIsCommitting(true); // ✅ 커밋 로딩 시작
+        setIsCommitting(true);
         setCommitStatus('PENDING');
         toast.info(`ℹ️ Requesting ZK proof from Aligned Meta-Proving Service...`);
         
-        // ✅ 5초 딜레이 시작
         setTimeout(() => {
             setCommitStatus('VALID');
             setCommittedBid(bidAmount);
             toast.success("✅ Commit has been successfully verified!");
             incrementCommitCount(auction.id, 1);
-            setIsCommitting(false); // ✅ 커밋 로딩 종료
+            setIsCommitting(false);
         }, 5000);
     };
 
@@ -155,15 +150,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                 <div className="aspect-video w-full overflow-hidden rounded-lg border">
                     <img src={selectedImageUrl || auction.imageUrl} alt={auction.title} className="w-full h-full object-cover" />
                 </div>
-                {auction.imageUrls && auction.imageUrls.length > 1 && (
-                    <div className="grid grid-cols-5 gap-2">
-                        {auction.imageUrls.map((url, index) => (
-                            <button key={index} onClick={() => setSelectedImageUrl(url)} className={`aspect-square rounded-md overflow-hidden border-2 ${selectedImageUrl === url ? 'border-primary' : 'border-transparent'}`}>
-                                <img src={url} alt={`thumbnail ${index}`} className="w-full h-full object-cover"/>
-                            </button>
-                        ))}
-                    </div>
-                )}
+                {/* ✅ 썸네일 목록을 보여주던 코드를 이 위치에서 삭제했습니다. */}
             </div>
 
             {/* Right Column */}
