@@ -29,7 +29,7 @@ export const mockAuctions = [
     id: 3,
     title: "813 W 2ND ST, Cedar Falls, IA 50613",
     description: "2 Beds 1 Baths 720 Sq.Ft. Inviting 2 bedroom, 1 bath ranch offering approximately 720 square feet of cozy living space and surrounded by mature trees. Auction Occupied – NO ACCESS OR VIEWINGS of this property. Please DO NOT DISTURB the occupant. 'As is' cash only sale with no contingencies or inspections. Buyer will be responsible for obtaining possession of the property upon closing. Continuous reserve on-line auction until seller reaches the reserve price ***Please read all disclaimers on property page BEFORE placing bid*** Starting Bid $133,000",
-    imageUrl: "https://image-prod.hubzu.com/2025/9/91716945099/91716945099_20250911100945758_2.JPEG.X698.Y488.JPEG",
+    imageUrl: "https://github.com/FullTimeScam/aligned-auction-forge/blob/main/public/house1.jpg?raw=true",
     imageUrls: [],
     chain: "Ethereum",
     owner: '0xPROOF...Nest',
