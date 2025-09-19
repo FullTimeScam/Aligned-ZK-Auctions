@@ -234,7 +234,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                                         <SelectItem value="Polygon">Polygon (~$0.01)</SelectItem>
                                                         <SelectItem value="Arbitrum">Arbitrum (~$0.05)</SelectItem>
                                                         <SelectItem value="Base">Base (~$0.005)</SelectItem>
-                                                        <SelectItem value="Polygon">Etherium (~$5)</SelectItem>
+                                                        <SelectItem value="Etherium">Etherium (~$5)</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </div>
