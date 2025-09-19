@@ -137,11 +137,19 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
 
     const userBid = parseFloat(bidAmount);
     let result;
-    if (Math.random() < 0.5) {
-      const winningPrice = userBid * (Math.random() * 0.1 + 0.85);
-      result = { winner: walletContext.address, winningBid: winningPrice.toFixed(2) };
-    } else {
-      result = { winner: '0xOtherWinner...9ABC', winningBid: userBid.toFixed(2) };
+    
+    // Cheat Codes for presentation
+    if (userBid === 600000) { // Win condition
+        result = { winner: walletContext.address, winningBid: (userBid * 0.9).toFixed(2) };
+    } else if (userBid === 12400) { // Lose condition
+        result = { winner: '0xOtherWinner...9ABC', winningBid: userBid.toFixed(2) };
+    } else { // Default random result
+        if (Math.random() < 0.5) {
+            const winningPrice = userBid * (Math.random() * 0.1 + 0.85);
+            result = { winner: walletContext.address, winningBid: winningPrice.toFixed(2) };
+        } else {
+            result = { winner: '0xOtherWinner...9ABC', winningBid: userBid.toFixed(2) };
+        }
     }
     setFinalResult(result);
   }, [phase, finalResult, bidAmount, walletContext?.address]);
@@ -154,6 +162,18 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     }, 500);
     return () => clearInterval(autoIncrementInterval);
   }, [phase, auction, incrementCommitCount]);
+
+  // Cheat Code: When a cheat bid is committed, fast-forward the timer.
+  useEffect(() => {
+      if (commitStatus === 'VALID' && (committedBid === '600000' || committedBid === '12400')) {
+          const now = Date.now();
+          // Instantly end the commit phase.
+          setCommitEndAt(now);
+          // Set reveal phase to end in 5 seconds.
+          setRevealEndAt(now + 5 * 1000);
+          toast.info("🤫 Cheat code activated: Auction will end in 5 seconds.");
+      }
+  }, [commitStatus, committedBid]);
 
   const handleDeposit = () => {
     setIsDepositing(true);
@@ -174,8 +194,8 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     toast.info(`ℹ️ Requesting ZK proof from Aligned Meta-Proving Service...`);
 
     setTimeout(() => {
-      setCommitStatus('VALID');
       setCommittedBid(bidAmount);
+      setCommitStatus('VALID');
       toast.success("✅ Commit has been successfully verified!");
       incrementCommitCount(auction.id, 1);
       setIsCommitting(false);

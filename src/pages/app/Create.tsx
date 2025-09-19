@@ -43,6 +43,7 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
 
     const formData = new FormData(e.currentTarget);
     const finalImageUrls = imageUrls.filter(url => url.trim() !== '');
+    const minPrice = parseFloat(formData.get('minPrice') as string);
 
     if (finalImageUrls.length === 0) {
         toast.error("🚨 Please provide at least one image URL.");
@@ -50,6 +51,7 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
     }
     
     const revealEnd = new Date(formData.get('endTime') as string);
+
 
     addAuction({
       title: formData.get('title') as string,
@@ -59,8 +61,8 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
       chain: formData.get('assetChain') as string,
       rule: formData.get('rule') as string,
       currency: formData.get('currency') as string,
-      minPrice: parseFloat(formData.get('minPrice') as string),
-      commitEnd: new Date(revealEnd.getTime() - 0.17 * 60 * 1000),
+      minPrice: minPrice,
+      commitEnd: new Date(revealEnd.getTime() - 5 * 1000),
       revealEnd: revealEnd,
     });
     
@@ -73,7 +75,7 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
       <Card>
         <CardHeader>
           <CardTitle>Create a New Auction</CardTitle>
-          <CardDescription>Fill in the details below to launch your ZK-powered Blind  auction.</CardDescription>
+          <CardDescription>Fill in the details below to launch your ZK-powered sealed-bid auction.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-8">

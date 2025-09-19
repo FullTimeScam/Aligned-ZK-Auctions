@@ -233,7 +233,7 @@ const Index = () => {
             <FeatureCard
               icon={ShieldCheck}
               title="Confidential Bidding"
-              description="Zero-Knowledge Proofs keep bidder identities and amounts completely private, protecting user privacy."
+              description="Zero-Knowledge Proofs keep bidder amounts completely private, protecting user privacy."
             />
             <FeatureCard
               icon={Calculator}
@@ -287,16 +287,17 @@ const Index = () => {
       </section>
 
 
+      {/* Live Auctions */}
+      <section id="auctions" className="snap-start">
+        <AuctionInterface />
+      </section>
+      
+
       {/* Performance Metrics */}
       <section className="py-20 px-6 snap-start">
       <PerformanceMetrics />
       </section>
 
-
-      {/* Live Auctions */}
-      <section id="auctions" className="snap-start">
-        <AuctionInterface />
-      </section>
             
       {/* Real-World Applications Section */}
       <section id="applications" className="py-20 px-6 bg-muted/20 min-h-screen flex items-center snap-start">

@@ -56,7 +56,7 @@ export const mockAuctions = [
     ],
     chain: "Ethereum",
     owner: '0xPengu...Huddle',
-    rule: "vickrey",
+    rule: "first_price",
     currency: "USDT",
     minPrice: 11000.0,
     commitCount: 888,
@@ -113,8 +113,29 @@ export const mockAuctions = [
   },
   {
     id: 7,
-    title: "FullTimeScam",
-    description: "law-abiding citizen / Not a scammer",
+    title: "KC-10 Aircraft SN: 86-0031",
+    description: "This KC-10 Aircraft, Tail Number 86-0031, is in a NON-FLYABLE condition and NOT in compliance with applicable FAA requirements. Engines: Mfr. General Electric, Mdl. CF6-50C2. Please contact Mr. Nicholas Price or Mr. Javier Olvera at 309 AMARG to make arrangements for inspection. This is an 'As is' cash-only sale with no contingencies. Buyer is responsible for obtaining possession upon closing. https://gsaauctions.gov/auctions/preview/339517",
+    imageUrl: "https://gsa-prod-ppms-attachments-prod.s3.amazonaws.com/sales/41QSCI25618/1/2146390.jpg?response-content-disposition=attachment%3B%20filename%3D%22unnamed%22&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEGUaCXVzLWVhc3QtMSJHMEUCIGgwzen2%2FRprhc5x3aZbTrqibYfcCZ7s5UxTf3UEBNrDAiEA7QBXu859ndUsT6kFtvKlqr3H1gbu%2Fg68ThodNsI0nHUqhQUI3v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwNTM0NTM1MzM5ODkiDA7isgwUJPncDIcQOSrZBC%2FIwLdFx5gQrqluzBZazLbUWVs0JIvw%2BLDkEHPuXYPhcVLx2bgL1IXwyrCUhBAqVQgWwhMYXDZaoReGEpzoTrlrnu9EAPtCQuz%2FxLbZahT1rQC%2BQEQQMxnDN%2BhPdBesbW0Nze057jiibOd8xa%2FhgZiV%2Fl8SgpHAmdsFsyjgrDJj3nfBPI%2Bnlzg1Pr3H92dEHL6%2BTNcVsYGz4cyoAA7XiCRe%2BIonVTgP4mVCOPzPYqEzWfyqFsbBAT9S47O1srDG5DVhqSg55Ew653fXHKBsmIY5HATSZnYct8ys4mT2%2FqyFsQWCYBO9JD%2FLegGZPbOk%2BGS1nch8EtCKrA03HFggZnpla%2BScWHdFq0c5p5v85HhGaHLEndsdYDPkPLU1AUb1MZQGMfLEN4zvvAtkgNs8%2FmxjH5sl0yeVPcnBJx9QZMJLFhIEgSkQJ3SyGjyPeF0GX1dvwtLXsOMdfv%2BtuXpO3ruodAweVxF2j1z0A8Be4ILFd%2BTF1Ei%2FfO5La7IZddXptvNelgxi6KYjK4nykFgz08oLWd5L0JcoQUY4iT720Jsq%2FFqChu2aO0ZAYeYWFke8VYzICk%2FsxO%2BTrPFcFhYSW6RyetEVZa%2BHxb6qAzzM585%2BP4HPS1WDGMJpT2hzKk4Up89htiK6tlX45h2sgCgpjRy53YlRKsdjk8QO5mruFiTxcWdghTfl42IIOsV7MIly95TSjZhHKQaqESAJXAZJ4%2BmQEsXrPNy6dmYXJFV%2BYYoUnY2jaM84ZteeJAqpA9Knwx5MVTWdJ%2B1K7ebOED12mHGb5bw%2Fdi7gX0ww4v62xgY6mgG0%2BkBp5C0E4W9wT7ZKScuOziFqgn%2B8VhZFl1Wwlot%2F9uVv%2FB4DjCCYyIGhTNklUOvF0Ts%2B4xVduMHAUzDv3N6G89CZIuS0EvpN49iYeQzANq6qKS4AcTj2zV%2BnrDC3FAEV%2BQ9FS8nySKnuHsOOaVlhsUimeVjRaa0%2BzfhT3DNU067OyIlC7fSminJmoKjuTusVyDc7k%2BDO4NjW&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250919T205912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=ASIAQY4QUGMSTTZRDJ5U%2F20250919%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=85b60849b3ed5fc5ac80cf668691a9e21b83c77954c9952ffc46c3a7dba15e37",
+    imageUrls: [
+      "https://media.defense.gov/2015/Mar/13/2001023906/-1/-1/0/150312-F-AB123-001.JPG",
+      "https://gsa-prod-ppms-attachments-prod.s3.amazonaws.com/sales/41QSCI25618/1/2146390.jpg?response-content-disposition=attachment%3B%20filename%3D%22unnamed%22&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEGUaCXVzLWVhc3QtMSJHMEUCIGgwzen2%2FRprhc5x3aZbTrqibYfcCZ7s5UxTf3UEBNrDAiEA7QBXu859ndUsT6kFtvKlqr3H1gbu%2Fg68ThodNsI0nHUqhQUI3v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwNTM0NTM1MzM5ODkiDA7isgwUJPncDIcQOSrZBC%2FIwLdFx5gQrqluzBZazLbUWVs0JIvw%2BLDkEHPuXYPhcVLx2bgL1IXwyrCUhBAqVQgWwhMYXDZaoReGEpzoTrlrnu9EAPtCQuz%2FxLbZahT1rQC%2BQEQQMxnDN%2BhPdBesbW0Nze057jiibOd8xa%2FhgZiV%2Fl8SgpHAmdsFsyjgrDJj3nfBPI%2Bnlzg1Pr3H92dEHL6%2BTNcVsYGz4cyoAA7XiCRe%2BIonVTgP4mVCOPzPYqEzWfyqFsbBAT9S47O1srDG5DVhqSg55Ew653fXHKBsmIY5HATSZnYct8ys4mT2%2FqyFsQWCYBO9JD%2FLegGZPbOk%2BGS1nch8EtCKrA03HFggZnpla%2BScWHdFq0c5p5v85HhGaHLEndsdYDPkPLU1AUb1MZQGMfLEN4zvvAtkgNs8%2FmxjH5sl0yeVPcnBJx9QZMJLFhIEgSkQJ3SyGjyPeF0GX1dvwtLXsOMdfv%2BtuXpO3ruodAweVxF2j1z0A8Be4ILFd%2BTF1Ei%2FfO5La7IZddXptvNelgxi6KYjK4nykFgz08oLWd5L0JcoQUY4iT720Jsq%2FFqChu2aO0ZAYeYWFke8VYzICk%2FsxO%2BTrPFcFhYSW6RyetEVZa%2BHxb6qAzzM585%2BP4HPS1WDGMJpT2hzKk4Up89htiK6tlX45h2sgCgpjRy53YlRKsdjk8QO5mruFiTxcWdghTfl42IIOsV7MIly95TSjZhHKQaqESAJXAZJ4%2BmQEsXrPNy6dmYXJFV%2BYYoUnY2jaM84ZteeJAqpA9Knwx5MVTWdJ%2B1K7ebOED12mHGb5bw%2Fdi7gX0ww4v62xgY6mgG0%2BkBp5C0E4W9wT7ZKScuOziFqgn%2B8VhZFl1Wwlot%2F9uVv%2FB4DjCCYyIGhTNklUOvF0Ts%2B4xVduMHAUzDv3N6G89CZIuS0EvpN49iYeQzANq6qKS4AcTj2zV%2BnrDC3FAEV%2BQ9FS8nySKnuHsOOaVlhsUimeVjRaa0%2BzfhT3DNU067OyIlC7fSminJmoKjuTusVyDc7k%2BDO4NjW&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250919T205912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=ASIAQY4QUGMSTTZRDJ5U%2F20250919%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=85b60849b3ed5fc5ac80cf668691a9e21b83c77954c9952ffc46c3a7dba15e37",
+    ],
+    chain: "Ethereum",
+    owner: '0xGov...Auction',
+    rule: "vickrey",
+    currency: "USDC",
+    minPrice: 500000.0,
+    commitCount: 8,
+    status: 'active',
+    commitEnd: getTimeFromNow(20160), // 2주 후
+    revealEnd: getTimeFromNow(20175), // 2주 15분 후
+    winner: null,
+    winningBid: null,
+  },
+  {
+    id: 8,
+    title: "FullTimeScam - Sejong Shin",
+    description: "Blockchain Valley – Research Team / law-abiding citizen / Not a scammer",
     imageUrl: "https://github.com/FullTimeScam/aligned-auction-forge/blob/main/public/FullTimeScam.jpg?raw=true",
     imageUrls: [
       "https://github.com/FullTimeScam/aligned-auction-forge/blob/main/public/FullTimeScam.jpg?raw=true",
@@ -133,6 +154,25 @@ export const mockAuctions = [
     winner: '0xAbCd...1234',
     winningBid: 82500.0,
   },
+  {
+    id: 9,
+    title: "Korea University - Blockchain Valley",
+    description: "An exclusive membership NFT for Blockchain Valley, the premier academic blockchain society at Korea University. This token grants access to a vibrant community of leading researchers, developers, and entrepreneurs shaping the future of Web3 in Korea. Holders can participate in private seminars, project incubation programs, and networking events with industry pioneers. This is more than a collectible; it's a passport to the heart of blockchain innovation, connecting academia with real-world application and fostering the next generation of builders.",
+    imageUrl: "https://media.licdn.com/dms/image/v2/D5603AQHTlLLfKbm4IQ/profile-displayphoto-shrink_400_400/B56ZYPPlR_GUAg-/0/1744012466210?e=2147483647&v=beta&t=5n4H20PkF2266_9POHKk4V1Sw1zHtiiSIAcGMtjUUI8",
+    imageUrls: [],
+    chain: "Ethereum",
+    owner: '0xKU...Valley',
+    rule: "vickrey",
+    currency: "USDC",
+    minPrice: 9999999999,
+    commitCount: 1,
+    status: 'active',
+    commitEnd: getTimeFromNow(10080), // 7일 후
+    revealEnd: getTimeFromNow(10095), // 7일 15분 후
+    winner: null,
+    winningBid: null,
+  },
+  
   // --- 종료 상품 ---
   {
     id: 2,
@@ -151,5 +191,5 @@ export const mockAuctions = [
     revealEnd: getTimeFromNow(-5),
     winner: '0xWinner...WXYZ',
     winningBid: 15500.0,
-  }
+  },
 ];
