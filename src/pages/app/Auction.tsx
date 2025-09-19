@@ -250,7 +250,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                                 <Input type="number" value={bidAmount} onChange={e => setBidAmount(e.target.value)} placeholder={`min. ${auction.minPrice}`} />
                                             </div>
                                         </div>
-                                        <Button className="w-full" onClick={handleCommit} disabled={isCommitting || commitStatus === 'VALID' || !bidAmount || parseFloat(bidAmount) < auction.minPrice}>
+                                        <Button className="w-full font-bold" onClick={handleCommit} disabled={isCommitting || commitStatus === 'VALID' || !bidAmount || parseFloat(bidAmount) < auction.minPrice}>
                                             {isCommitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                             {isCommitting ? 'Committing...' : '2. Commit Bid'}
                                         </Button>
@@ -271,7 +271,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                         <p className="font-mono text-sm">{finalResult.winner}</p>
                                     </div>
                                     {isWinner ? (
-                                        <Button className="w-full">Claim Asset</Button>
+                                        <Button className="w-full font-bold">Claim Asset</Button>
                                     ) : (
                                         <p className="text-sm text-center text-destructive pt-2">You were not the winner.</p>
                                     )}
