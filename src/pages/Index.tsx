@@ -287,15 +287,15 @@ const Index = () => {
       </section>
 
 
-      {/* Live Auctions */}
-      <section id="auctions" className="snap-start">
-        <AuctionInterface />
-      </section>
-      
-
       {/* Performance Metrics */}
       <section className="py-20 px-6 snap-start">
       <PerformanceMetrics />
+      </section>
+
+
+      {/* Live Auctions */}
+      <section id="auctions" className="snap-start">
+        <AuctionInterface />
       </section>
 
             
@@ -402,7 +402,7 @@ const Index = () => {
                 <VisionCard
                     step={5}
                     icon={CandlestickChart}
-                    title="MEV-Resistant DEX (Batch Auctions)"
+                    title="Fully Anonymous DEX / MEV-Resistant DEX (Batch Auctions)"
                     description="A decentralized exchange that is resistant to Miner Extractable Value (MEV) by executing trades in batches."
                     how="Instead of 'first come, first served', all trades within a block are collected and settled at one uniform price. This batching neutralizes the speed advantage, making front-running impossible. ZK proofs can further enhance this by keeping orders confidential until settlement."
                 />
@@ -479,6 +479,17 @@ const Index = () => {
           <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
             © 2025 Aligned ZK Auctions. Built on Aligned Layer.
           </div>
+          <div> github :
+          <a
+            href="https://github.com/FullTimeScam/Aligned-ZK-Auctions"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline border-t border-border mt-8 pt-8 text-center text-sm"
+          >
+            https://github.com/FullTimeScam/Aligned-ZK-Auctions
+          </a>
+          </div>
+
         </div>
       </footer>
     </div>
