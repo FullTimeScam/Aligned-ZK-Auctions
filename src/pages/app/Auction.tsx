@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom';
 import { WalletContext, Auction } from '@/components/AuctionApp';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"; // ✅ CardDescription 추가
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Users, Loader2, Info } from 'lucide-react';
+import { Users, Loader2, Info } from 'lucide-react'; // ✅ Info 아이콘 추가
 
 // ## UI 컴포넌트 ##
 
@@ -17,6 +17,7 @@ const ProofVisualizer = ({ startCount }: { startCount: number }) => {
     useEffect(() => {
         setProofs(startCount);
         const interval = setInterval(() => {
+            // ✅ 사용자가 수정한 로직 반영
             setProofs(prev => prev + Math.floor(Math.random() * 100) + 0);
         }, 300);
         return () => clearInterval(interval);
@@ -62,6 +63,8 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     
     const [isDepositing, setIsDepositing] = useState(false);
     const [isCommitting, setIsCommitting] = useState(false);
+    
+    // ✅ 낙찰자 및 패배자의 최종 상태 관리
     const [hasWinnerPaid, setHasWinnerPaid] = useState(false);
     const [hasRefunded, setHasRefunded] = useState(false);
 
@@ -108,6 +111,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     useEffect(() => {
         if (phase === 'COMMIT_OPEN' && auction) {
             const autoIncrementInterval = setInterval(() => {
+                // ✅ 사용자가 수정한 로직 반영
                 incrementCommitCount(auction.id, Math.floor(Math.random() * 25) + 1);
             }, 500);
             return () => clearInterval(autoIncrementInterval);
@@ -141,6 +145,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
         }, 5000);
     };
 
+    // ✅ 낙찰자 잔금 입금 및 패배자 환불 핸들러 추가
     const handleFinalDeposit = () => {
         toast.info("ℹ️ Processing final payment...");
         setTimeout(() => {
@@ -162,6 +167,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     const securityMode = phase === 'COMMIT_OPEN' ? '⚡ Fast Mode' : phase === 'SETTLED' ? '🔒 Secure Mode' : null;
     const isWinner = finalResult && walletContext?.isConnected && walletContext.address === finalResult.winner;
     
+    // ✅ 사용자가 수정한 보증금 비율 반영
     const bondAmount = auction.minPrice * 0.15;
     const remainingBalance = finalResult ? parseFloat(finalResult.winningBid) - bondAmount : 0;
 
@@ -169,7 +175,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column */}
             <div className="space-y-6">
-                 <div className="aspect-video w-full overflow-hidden rounded-lg border">
+                <div className="aspect-video w-full overflow-hidden rounded-lg border">
                     <img src={selectedImageUrl || auction.imageUrl} alt={auction.title} className="w-full h-full object-cover" />
                 </div>
                 {auction.imageUrls && auction.imageUrls.length > 1 && (
@@ -231,6 +237,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                             {phase === 'REVEAL_OPEN' && 'Reveal Phase'}
                             {phase === 'SETTLED' && 'Auction Ended'}
                         </CardTitle>
+                        {/* ✅ 보증금 안내문 추가 */}
                         {phase === 'COMMIT_OPEN' && !hasDeposited && (
                              <CardDescription className="pt-2 flex items-start gap-2">
                                 <Info className="h-4 w-4 mt-1 flex-shrink-0" />
@@ -293,13 +300,13 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                         <p className="font-mono text-sm">{finalResult.winner}</p>
                                     </div>
                                     
+                                    {/* ✅ 낙찰자/패배자 UI 분기 */}
                                     {isWinner ? (
                                         hasWinnerPaid ? (
                                             <Button className="w-full font-bold">Claim Asset</Button>
                                         ) : (
                                             <div className="space-y-4 pt-2">
-                                                {/* ✅ 최종 입금액 계산 및 표시 */}
-                                                <div className="p-4 border rounded-lg space-y-2">
+                                                 <div className="p-4 border rounded-lg space-y-2">
                                                     <div className="flex justify-between text-sm">
                                                         <p className="text-muted-foreground">Final Price</p>
                                                         <p>{parseFloat(finalResult.winningBid).toLocaleString()} {auction.currency}</p>
@@ -314,6 +321,10 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                                     </div>
                                                 </div>
                                                 <Button className="w-full font-bold" onClick={handleFinalDeposit}>Deposit Final Amount</Button>
+                                                <CardDescription className="pt-2 flex items-start gap-2 text-primary">
+                                                    <Info className="h-4 w-4 mt-1 flex-shrink-0" />
+                                                    <span>You must deposit the final amount within 7 days to claim your asset. Failure to do so will result in the forfeiture of your bond.</span>
+                                                </CardDescription>
                                             </div>
                                         )
                                     ) : (
