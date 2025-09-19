@@ -118,10 +118,10 @@ export const AuctionInterface = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">
-            Live <span className="performance-text">ZK Auctions</span>
+            Live <span className="performance-text">Aligned ZK Auctions</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Experience sealed-bid auctions with instant verification and cross-chain support
+            Experience Blind  auctions with instant verification and cross-chain support
           </p>
         </div>
 

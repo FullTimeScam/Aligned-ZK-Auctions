@@ -5,6 +5,9 @@
 /* ZK Auction Platform Design System - Futuristic & Performance-focused */
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   :root {
     /* Core Brand Colors */
     --background: 220 25% 8%;

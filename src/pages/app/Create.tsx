@@ -73,7 +73,7 @@ export default function CreatePage({ addAuction }: CreatePageProps) {
       <Card>
         <CardHeader>
           <CardTitle>Create a New Auction</CardTitle>
-          <CardDescription>Fill in the details below to launch your ZK-powered sealed-bid auction.</CardDescription>
+          <CardDescription>Fill in the details below to launch your ZK-powered Blind  auction.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-8">
