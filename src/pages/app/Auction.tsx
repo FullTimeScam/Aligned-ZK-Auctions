@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom';
 import { WalletContext, Auction } from '@/components/AuctionApp';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Users, Loader2 } from 'lucide-react';
+import { Users, Loader2, Info } from 'lucide-react';
 
 // ## UI 컴포넌트 ##
 
@@ -17,7 +17,6 @@ const ProofVisualizer = ({ startCount }: { startCount: number }) => {
     useEffect(() => {
         setProofs(startCount);
         const interval = setInterval(() => {
-            // ✅ 사용자가 수정한 로직 반영 (0 ~ 99 사이 값 증가)
             setProofs(prev => prev + Math.floor(Math.random() * 100) + 0);
         }, 300);
         return () => clearInterval(interval);
@@ -63,6 +62,8 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     
     const [isDepositing, setIsDepositing] = useState(false);
     const [isCommitting, setIsCommitting] = useState(false);
+    const [hasWinnerPaid, setHasWinnerPaid] = useState(false);
+    const [hasRefunded, setHasRefunded] = useState(false);
 
     useEffect(() => {
         const auctionId = parseInt(id || '0');
@@ -107,7 +108,6 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     useEffect(() => {
         if (phase === 'COMMIT_OPEN' && auction) {
             const autoIncrementInterval = setInterval(() => {
-                // ✅ 사용자가 수정한 로직 반영 (0.5초마다 1~25 증가)
                 incrementCommitCount(auction.id, Math.floor(Math.random() * 25) + 1);
             }, 500);
             return () => clearInterval(autoIncrementInterval);
@@ -141,19 +141,35 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
         }, 5000);
     };
 
+    const handleFinalDeposit = () => {
+        toast.info("ℹ️ Processing final payment...");
+        setTimeout(() => {
+            setHasWinnerPaid(true);
+            toast.success("✅ Payment successful! You can now claim your asset.");
+        }, 3000);
+    };
+
+    const handleRefund = () => {
+        toast.info("ℹ️ Refunding your bond...");
+        setTimeout(() => {
+            setHasRefunded(true);
+            toast.success("✅ Your bond has been successfully refunded to your wallet.");
+        }, 3000);
+    };
+
     if (!auction) return <p className="text-center text-muted-foreground py-10">Loading auction...</p>;
     
     const securityMode = phase === 'COMMIT_OPEN' ? '⚡ Fast Mode' : phase === 'SETTLED' ? '🔒 Secure Mode' : null;
     const isWinner = finalResult && walletContext?.isConnected && walletContext.address === finalResult.winner;
     
-    // ✅ 보증 금액 계산 (최소 입찰가의 15%)
-    const bondAmount = (auction.minPrice * 0.15).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const bondAmount = auction.minPrice * 0.15;
+    const remainingBalance = finalResult ? parseFloat(finalResult.winningBid) - bondAmount : 0;
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column */}
             <div className="space-y-6">
-                <div className="aspect-video w-full overflow-hidden rounded-lg border">
+                 <div className="aspect-video w-full overflow-hidden rounded-lg border">
                     <img src={selectedImageUrl || auction.imageUrl} alt={auction.title} className="w-full h-full object-cover" />
                 </div>
                 {auction.imageUrls && auction.imageUrls.length > 1 && (
@@ -209,11 +225,19 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
 
                 {/* Action Card */}
                 <Card>
-                    <CardHeader><CardTitle>
-                        {phase === 'COMMIT_OPEN' && 'Place Your Bid'}
-                        {phase === 'REVEAL_OPEN' && 'Reveal Phase'}
-                        {phase === 'SETTLED' && 'Auction Ended'}
-                    </CardTitle></CardHeader>
+                    <CardHeader>
+                        <CardTitle>
+                            {phase === 'COMMIT_OPEN' && 'Place Your Bid'}
+                            {phase === 'REVEAL_OPEN' && 'Reveal Phase'}
+                            {phase === 'SETTLED' && 'Auction Ended'}
+                        </CardTitle>
+                        {phase === 'COMMIT_OPEN' && !hasDeposited && (
+                             <CardDescription className="pt-2 flex items-start gap-2">
+                                <Info className="h-4 w-4 mt-1 flex-shrink-0" />
+                                <span>A bond is required to ensure participation. It will be returned if you do not win. Winners must pay the remaining balance within 7 days or the bond will be forfeited.</span>
+                            </CardDescription>
+                        )}
+                    </CardHeader>
                     <CardContent>
                          {phase === 'COMMIT_OPEN' && (
                             <div className="space-y-4">
@@ -224,10 +248,9 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                         <p className="text-xs text-muted-foreground mt-2">Your bid is sealed until the reveal phase.</p>
                                     </div>
                                 ) : !hasDeposited ? (
-                                    // ✅ 보증금액을 버튼에 표시
                                     <Button className="w-full font-bold" onClick={handleDeposit} disabled={isDepositing}>
                                         {isDepositing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                        {isDepositing ? 'Processing Deposit...' : `1. Deposit Bond 15% (${bondAmount} ${auction.currency})`}
+                                        {isDepositing ? 'Processing Deposit...' : `1. Deposit Bond 15% (~${bondAmount.toLocaleString()} ${auction.currency})`}
                                     </Button>
                                 ) : (
                                     <div className="space-y-4">
@@ -269,10 +292,36 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                         <p className="text-muted-foreground">Winner</p>
                                         <p className="font-mono text-sm">{finalResult.winner}</p>
                                     </div>
+                                    
                                     {isWinner ? (
-                                        <Button className="w-full font-bold">Claim Asset</Button>
+                                        hasWinnerPaid ? (
+                                            <Button className="w-full font-bold">Claim Asset</Button>
+                                        ) : (
+                                            <div className="space-y-4 pt-2">
+                                                {/* ✅ 최종 입금액 계산 및 표시 */}
+                                                <div className="p-4 border rounded-lg space-y-2">
+                                                    <div className="flex justify-between text-sm">
+                                                        <p className="text-muted-foreground">Final Price</p>
+                                                        <p>{parseFloat(finalResult.winningBid).toLocaleString()} {auction.currency}</p>
+                                                    </div>
+                                                    <div className="flex justify-between text-sm">
+                                                        <p className="text-muted-foreground">Bond Paid</p>
+                                                        <p>- {bondAmount.toLocaleString()} {auction.currency}</p>
+                                                    </div>
+                                                    <div className="flex justify-between font-bold text-lg border-t pt-2 mt-2">
+                                                        <p>Remaining Balance</p>
+                                                        <p>{remainingBalance.toLocaleString()} {auction.currency}</p>
+                                                    </div>
+                                                </div>
+                                                <Button className="w-full font-bold" onClick={handleFinalDeposit}>Deposit Final Amount</Button>
+                                            </div>
+                                        )
                                     ) : (
-                                        <p className="text-sm text-center text-destructive pt-2">You were not the winner.</p>
+                                        hasRefunded ? (
+                                            <p className="text-sm text-center text-green-500 pt-2">Your bond has been returned.</p>
+                                        ) : (
+                                            <Button className="w-full font-bold" variant="secondary" onClick={handleRefund}>Refund Bond</Button>
+                                        )
                                     )}
                                 </div>
                             ) : <p>You did not participate in this auction.</p>
