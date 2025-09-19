@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Users, Loader2 } from 'lucide-react'; // ✅ 로딩 아이콘 추가
+import { Users, Loader2 } from 'lucide-react';
 
 // ## UI 컴포넌트 ##
 
@@ -17,6 +17,7 @@ const ProofVisualizer = ({ startCount }: { startCount: number }) => {
     useEffect(() => {
         setProofs(startCount);
         const interval = setInterval(() => {
+            // 사용자가 수정한 로직 반영
             setProofs(prev => prev + Math.floor(Math.random() * 100) + 0);
         }, 300);
         return () => clearInterval(interval);
@@ -60,7 +61,6 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     const [finalResult, setFinalResult] = useState<{ winner: string; winningBid: string } | null>(null);
     const [committedBid, setCommittedBid] = useState<string | null>(null);
     
-    // ✅ 버튼 로딩 상태를 관리하기 위한 상태 추가
     const [isDepositing, setIsDepositing] = useState(false);
     const [isCommitting, setIsCommitting] = useState(false);
 
@@ -107,6 +107,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     useEffect(() => {
         if (phase === 'COMMIT_OPEN' && auction) {
             const autoIncrementInterval = setInterval(() => {
+                // 사용자가 수정한 로직 반영
                 incrementCommitCount(auction.id, Math.floor(Math.random() * 25) + 1);
             }, 500);
             return () => clearInterval(autoIncrementInterval);
@@ -114,13 +115,11 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     }, [phase, auction, incrementCommitCount]);
 
     const handleDeposit = () => {
-        setIsDepositing(true); // ✅ 로딩 시작
-
-        // ✅ 5초 딜레이 시작
+        setIsDepositing(true);
         setTimeout(() => {
             setHasDeposited(true);
             toast.info("ℹ️ Bond deposited successfully.");
-            setIsDepositing(false); // ✅ 로딩 종료
+            setIsDepositing(false);
         }, 5000);
     };
 
@@ -129,17 +128,16 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
         if (!hasDeposited) { toast.warning("⚠️ Please deposit a bond first."); return; }
         if (!auction || parseFloat(bidAmount) < auction.minPrice) { toast.error(`🚨 Bid must be at least ${auction?.minPrice} ${auction?.currency}.`); return; }
         
-        setIsCommitting(true); // ✅ 커밋 로딩 시작
+        setIsCommitting(true);
         setCommitStatus('PENDING');
         toast.info(`ℹ️ Requesting ZK proof from Aligned Meta-Proving Service...`);
         
-        // ✅ 5초 딜레이 시작
         setTimeout(() => {
             setCommitStatus('VALID');
             setCommittedBid(bidAmount);
             toast.success("✅ Commit has been successfully verified!");
             incrementCommitCount(auction.id, 1);
-            setIsCommitting(false); // ✅ 커밋 로딩 종료
+            setIsCommitting(false);
         }, 5000);
     };
 
@@ -147,6 +145,9 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     
     const securityMode = phase === 'COMMIT_OPEN' ? '⚡ Fast Mode' : phase === 'SETTLED' ? '🔒 Secure Mode' : null;
     const isWinner = finalResult && walletContext?.isConnected && walletContext.address === finalResult.winner;
+    
+    // ✅ 보증 금액 계산 (최소 입찰가의 10%)
+    const bondAmount = (auction.minPrice * 0.1).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -172,6 +173,11 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                     <Badge variant="outline">{auction.chain}</Badge>
                     <h1 className="text-4xl font-bold tracking-tighter">{auction.title}</h1>
                     <p className="text-muted-foreground">{auction.description}</p>
+                    {/* ✅ 최소 입찰가 정보 표시 */}
+                    <div className="text-lg pt-2">
+                        <span className="text-muted-foreground">Min. Bid: </span>
+                        <span className="font-bold text-primary">{auction.minPrice.toLocaleString()} {auction.currency}</span>
+                    </div>
                 </div>
                 
                 <Card>
@@ -219,9 +225,10 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                         <p className="text-xs text-muted-foreground mt-2">Your bid is sealed until the reveal phase.</p>
                                     </div>
                                 ) : !hasDeposited ? (
+                                    // ✅ 보증금액을 버튼에 표시
                                     <Button className="w-full" onClick={handleDeposit} disabled={isDepositing}>
                                         {isDepositing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                        {isDepositing ? 'Processing Deposit...' : '1. Deposit Bond'}
+                                        {isDepositing ? 'Processing Deposit...' : `1. Deposit Bond (~${bondAmount} ${auction.currency})`}
                                     </Button>
                                 ) : (
                                     <div className="space-y-4">
