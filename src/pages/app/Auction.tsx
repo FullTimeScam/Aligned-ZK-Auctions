@@ -17,7 +17,7 @@ const ProofVisualizer = ({ startCount }: { startCount: number }) => {
     useEffect(() => {
         setProofs(startCount);
         const interval = setInterval(() => {
-            // 사용자가 수정한 로직 반영
+            // ✅ 사용자가 수정한 로직 반영 (0 ~ 99 사이 값 증가)
             setProofs(prev => prev + Math.floor(Math.random() * 100) + 0);
         }, 300);
         return () => clearInterval(interval);
@@ -107,7 +107,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     useEffect(() => {
         if (phase === 'COMMIT_OPEN' && auction) {
             const autoIncrementInterval = setInterval(() => {
-                // 사용자가 수정한 로직 반영
+                // ✅ 사용자가 수정한 로직 반영 (0.5초마다 1~25 증가)
                 incrementCommitCount(auction.id, Math.floor(Math.random() * 25) + 1);
             }, 500);
             return () => clearInterval(autoIncrementInterval);
@@ -173,7 +173,6 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                     <Badge variant="outline">{auction.chain}</Badge>
                     <h1 className="text-4xl font-bold tracking-tighter">{auction.title}</h1>
                     <p className="text-muted-foreground">{auction.description}</p>
-                    {/* ✅ 최소 입찰가 정보 표시 */}
                     <div className="text-lg pt-2">
                         <span className="text-muted-foreground">Min. Bid: </span>
                         <span className="font-bold text-primary">{auction.minPrice.toLocaleString()} {auction.currency}</span>
