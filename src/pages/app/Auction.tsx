@@ -146,8 +146,8 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     const securityMode = phase === 'COMMIT_OPEN' ? '⚡ Fast Mode' : phase === 'SETTLED' ? '🔒 Secure Mode' : null;
     const isWinner = finalResult && walletContext?.isConnected && walletContext.address === finalResult.winner;
     
-    // ✅ 보증 금액 계산 (최소 입찰가의 10%)
-    const bondAmount = (auction.minPrice * 0.1).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    // ✅ 보증 금액 계산 (최소 입찰가의 15%)
+    const bondAmount = (auction.minPrice * 0.15).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -226,9 +226,9 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                     </div>
                                 ) : !hasDeposited ? (
                                     // ✅ 보증금액을 버튼에 표시
-                                    <Button className="w-full" onClick={handleDeposit} disabled={isDepositing}>
+                                    <Button className="w-full font-bold" onClick={handleDeposit} disabled={isDepositing}>
                                         {isDepositing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                        {isDepositing ? 'Processing Deposit...' : `1. Deposit Bond (~${bondAmount} ${auction.currency})`}
+                                        {isDepositing ? 'Processing Deposit...' : `1. Deposit Bond (${bondAmount} ${auction.currency})`}
                                     </Button>
                                 ) : (
                                     <div className="space-y-4">
