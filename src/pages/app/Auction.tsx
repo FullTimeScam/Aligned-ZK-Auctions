@@ -228,7 +228,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
                                     // ✅ 보증금액을 버튼에 표시
                                     <Button className="w-full font-bold" onClick={handleDeposit} disabled={isDepositing}>
                                         {isDepositing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                        {isDepositing ? 'Processing Deposit...' : `1. Deposit Bond (${bondAmount} ${auction.currency})`}
+                                        {isDepositing ? 'Processing Deposit...' : `1. Deposit Bond 15% (${bondAmount} ${auction.currency})`}
                                     </Button>
                                 ) : (
                                     <div className="space-y-4">
