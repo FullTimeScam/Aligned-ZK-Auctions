@@ -1,3 +1,3 @@
 ## https://alignedlayer.com/
 ## https://x.com/blockchainkor
-### https://t.me/fulltimescam
+### https://t.me/fulltime_scam
