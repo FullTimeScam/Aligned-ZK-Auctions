@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Users, Loader2, Info } from 'lucide-react';
+import { Users, Loader2, Info, UserCircle } from 'lucide-react';
 
-// ## UI 컴포넌트 ##
+// ## UI Components ##
 
 const ProofVisualizer = ({ startCount }: { startCount: number }) => {
   const [proofs, setProofs] = useState(startCount);
@@ -38,7 +38,7 @@ const StatusBadge = ({ status, mode }: { status: string, mode?: string | null })
   return <Badge variant={variant} className="text-sm">{status} {mode && <span className="ml-2 opacity-70">{mode}</span>}</Badge>;
 };
 
-// ## 메인 페이지 컴포넌트 ##
+// ## Main Page Component ##
 
 type AuctionPageProps = {
   auctions: Auction[];
@@ -67,14 +67,14 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
   const [hasWinnerPaid, setHasWinnerPaid] = useState(false);
   const [hasRefunded, setHasRefunded] = useState(false);
 
-  // 종료시각을 고정해두는 상태
+  // Keep track of end times
   const [commitEndAt, setCommitEndAt] = useState<number | null>(null);
   const [revealEndAt, setRevealEndAt] = useState<number | null>(null);
 
-  // 인터벌 ID 보관
+  // Store interval ID
   const intervalRef = useRef<number | null>(null);
 
-  // 선택된 경매 고정
+  // Set selected auction
   useEffect(() => {
     const auctionId = parseInt(id || '0', 10);
     const foundAuction = auctions.find(a => a.id === auctionId);
@@ -86,7 +86,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     setRevealEndAt(new Date(foundAuction.revealEnd).getTime());
   }, [id, auctions]);
 
-  // 카운트다운 인터벌 초기화. 종료시각만 의존
+  // Initialize countdown interval, dependent only on end times
   useEffect(() => {
     if (!commitEndAt || !revealEndAt) return;
 
@@ -108,14 +108,13 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
       }
     };
 
-    // 즉시 1회 실행 후 1초 주기
+    // Run once immediately, then every second
     tick();
     intervalRef.current = window.setInterval(tick, 1000);
-
-    // 탭 복귀시 드리프트 보정
+    
+    // Correct drift on tab focus
     const onVisibility = () => {
       if (document.visibilityState === 'visible') {
-        // 다음 프레임에 tick
         setTimeout(tick, 0);
       }
     };
@@ -128,7 +127,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     };
   }, [commitEndAt, revealEndAt]);
 
-  // 경매 종료 후 1회 결과 계산
+  // Calculate result once after auction ends
   useEffect(() => {
     if (phase !== 'SETTLED') return;
     if (finalResult) return;
@@ -154,7 +153,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     setFinalResult(result);
   }, [phase, finalResult, bidAmount, walletContext?.address]);
 
-  // 커밋카운트 자동 증가. phase와 auction.id만 의존
+  // Auto-increment commit count, dependent only on phase and auction.id
   useEffect(() => {
     if (phase !== 'COMMIT_OPEN' || !auction) return;
     const autoIncrementInterval = window.setInterval(() => {
@@ -162,8 +161,8 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
     }, 500);
     return () => clearInterval(autoIncrementInterval);
   }, [phase, auction, incrementCommitCount]);
-
-  // Cheat Code: When a cheat bid is committed, fast-forward the timer.
+  
+    // Cheat Code: When a cheat bid is committed, fast-forward the timer.
   useEffect(() => {
       if (commitStatus === 'VALID' && (committedBid === '600000' || committedBid === '12400')) {
           const now = Date.now();
@@ -251,7 +250,16 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
       {/* Right Column */}
       <div className="space-y-6">
         <div className="space-y-2">
-          <Badge variant="outline">{auction.chain}</Badge>
+           <div className="flex justify-between items-center">
+            <div className="flex gap-2 items-center">
+                <Badge variant="outline">{auction.chain}</Badge>
+                <Badge variant="outline">{auction.rule === 'vickrey' ? 'Vickrey' : 'First Price'}</Badge>
+            </div>
+             <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                 <UserCircle className="h-4 w-4" />
+                 <span>Owner: {auction.owner}</span>
+             </div>
+           </div>
           <h1 className="text-4xl font-bold tracking-tighter">{auction.title}</h1>
           <p className="text-muted-foreground">{auction.description}</p>
           <div className="text-lg pt-2">
@@ -299,7 +307,7 @@ export default function AuctionPage({ auctions, incrementCommitCount }: AuctionP
             {phase === 'COMMIT_OPEN' && !hasDeposited && (
               <CardDescription className="pt-2 flex items-start gap-2">
                 <Info className="h-4 w-4 mt-1 flex-shrink-0" />
-                <span>A bond is required to ensure participation. It will be returned if you do not win. Winners must pay the remaining balance within 7 days or the bond will be forfeited.</span>
+                <span>A bond is required to ensure participation. It will be returned if you do not win. Winners must pay the remaining balance within 7 days or the bond will be distributed to other bidders.</span>
               </CardDescription>
             )}
           </CardHeader>

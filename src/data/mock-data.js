@@ -143,7 +143,7 @@ export const mockAuctions = [
       "https://github.com/FullTimeScam/aligned-auction-forge/blob/main/public/FullTimeScam.jpg?raw=true",
     ],
     chain: "Ethereum",
-    owner: '0xOwner...5678',
+    owner: '0xFTScam...Sejong',
     rule: "vickrey",
     currency: "USDC",
     minPrice: 99999999999.0,
